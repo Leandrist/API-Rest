@@ -1,20 +1,39 @@
 package br.com.big.ApiProject.model;
 
 import java.util.Objects;
-import javax.persistence.*;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
+@Table (name="Pessoa")
 public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PESSOA_ID")
     private Long id;
     
+    @Column (nullable = false, name = "PESSOA_NOME")
     private String nome;
+    
+    @Column (nullable = true, name = "PESSOA_ENDEREÇO")
     private String endereco;
+    
+    @Column (nullable = true, name = "PESSOA_CIDADE")
     private String cidade;
+    
+    @Column (nullable = true, name = "PESSOA_CEP")
     private String cep;
+    
+    @Column (nullable = true, name = "PESSOA_UF")
     private String uf;
 
     //uma pessoa para vários contatos
@@ -78,14 +97,6 @@ public class Pessoa {
 
     public void setUf(String uf) {
         this.uf = uf;
-    }
-
-    public List<Contato> getContatos() {
-        return contatos;
-    }
-
-    public void setContatos(List<Contato> contatos) {
-        this.contatos = contatos;
     }
 
     // Métodos para procura de igualdade

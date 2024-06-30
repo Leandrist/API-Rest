@@ -1,26 +1,41 @@
 package br.com.big.ApiProject.model;
 
-import javax.persistence.*;
+
 import java.util.Objects;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Contato {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column (name = "CONTATO_ID")
     private Long id;
     
-    private Integer tipoContato;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CONTATO_TIPO", nullable = false)
+    private TipoContato tipoContato;
+    
+    @Column (name = "CONTATO_NUMERO")
     private String contato;
 
     //vários contatos para uma pessoa
     @ManyToOne
-    @JoinColumn(name = "PESSOA_ID")
+    @JoinColumn(name = "PESSOA_ID", referencedColumnName = "PESSOA_ID")
     private Pessoa pessoa;
 
     public Contato() {}
 
-    public Contato(Long id, Integer tipoContato, String contato) {
+    public Contato(Long id, TipoContato tipoContato, String contato, Pessoa pessoa) {
         this.id = id;
         this.tipoContato = tipoContato;
         this.contato = contato;
@@ -34,11 +49,11 @@ public class Contato {
         this.id = id;
     }
 
-    public Integer getTipoContato() {
+    public TipoContato getTipoContato() {
         return tipoContato;
     }
 
-    public void setTipoContato(Integer tipoContato) {
+    public void setTipoContato(TipoContato tipoContato) {
         this.tipoContato = tipoContato;
     }
 
