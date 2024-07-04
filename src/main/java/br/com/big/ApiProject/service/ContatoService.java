@@ -1,41 +1,85 @@
 package br.com.big.ApiProject.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.big.ApiProject.model.Contato;
-import br.com.big.ApiProject.model.TipoContato;
+import br.com.big.ApiProject.model.Pessoa;
+import br.com.big.ApiProject.repository.ContatoRepository;
+import br.com.big.ApiProject.repository.PessoaRepository;
+import br.com.big.ApiProject.service.interfaces.ContatoServiceInterface;
 
 
 @Service
-public class ContatoService {
+public class ContatoService implements ContatoServiceInterface {
 
+	@Autowired
+	private ContatoRepository contatoRepository;
+	
+	@Autowired
+	private PessoaRepository pessoaRepository;
+	
+	@Override
+	public List<Contato> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Optional<Contato> findById() {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
+	@Override
+	public void delete(long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public Contato save(Contato contato) {
+		if(contato.getPessoa().getId() != null) {
+			
+			Optional<Pessoa> findPessoa = pessoaRepository.
+					findById(contato.getPessoa().getId());			
+			if(!findPessoa.isEmpty()) {
 
-        // Valida contatos, se é celular 11 dígitos, se é telefone 10 dígitos
-        if (contato.getTipoContato() == TipoContato.Cel) {
-            if (!isCelularValido(contato.getContato())) {
-                throw new IllegalArgumentException("Número inválido! Exemplo: (11) 123456789. Seu número deve conter 11 dígitos!");
-            }
-        } else if (contato.getTipoContato() == TipoContato.Tel) {
-            if (!isTelefoneValido(contato.getContato())) {
-                throw new IllegalArgumentException("Número inválido! Exemplo:(11) 12345678. Seu número deve conter 10 dígitos");
-            }
-        }
-        
-        return (contato);
+				contato.setPessoa(findPessoa.get());
+				return contatoRepository.save(contato);
+			}else {
+				System.out.println("Pessoa não encontrada id: " + 
+						contato.getPessoa().getId());
+				return null;
+			}
+			
+		}else {
+			System.out.println("Pessoa não encontrada!");
+			return null;
+		}
+	}
 
-    }
-
+	@Override
+	public Contato update(Contato contato) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
 	//Regras de validação de número
     private boolean isCelularValido(String numero) {
         // Tem 11 dígitos numéricos?
         return numero.matches("\\d{11}");
     }
-
     private boolean isTelefoneValido(String numero) {
         // Tem 10 dígitos numéricos?
         return numero.matches("\\d{10}");
     }
+
 }
 		
 	

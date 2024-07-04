@@ -1,11 +1,19 @@
 package br.com.big.ApiProject.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.big.ApiProject.model.Pessoa;
+import br.com.big.ApiProject.repository.PessoaRepository;
 
 @Service
 public class PessoaService {
+	
+	@Autowired
+	private PessoaRepository pessoaRepository;
 	
 	public Pessoa save(Pessoa pessoa) {
 		// Valida nome
@@ -23,7 +31,43 @@ public class PessoaService {
             throw new IllegalArgumentException("A UF deve ter exatamente duas letras.");
         }
         
-        return(pessoa);
+        try {
+			return pessoaRepository.save(pessoa);
+		}catch(Exception e) {
+			System.out.println("ERR: Erro ao inserir produto!" + 
+					pessoa.toString() + ": " + e.getMessage());
+			return null;
+		}
 	}
 
+	//CRUD
+	
+	public List<Pessoa> findall(){
+		return pessoaRepository.findAll(); 
+	}
+	
+	public Optional<Pessoa> findById(Long id) {
+		return pessoaRepository.findById(id); 
+	}
+	
+	public Pessoa update(Pessoa pessoa) {
+		Optional<Pessoa> findPessoa = pessoaRepository.findById(pessoa.getId());
+		
+		if(findPessoa.isPresent()) {
+			Pessoa updPessoa = findPessoa.get(); 
+			updPessoa.setCep(pessoa.getCep());
+			updPessoa.setNome(pessoa.getNome());
+			updPessoa.setEndereco(pessoa.getEndereco());
+			updPessoa.setUf(pessoa.getUf());
+			updPessoa.setCidade(pessoa.getCidade());
+			return pessoaRepository.save(updPessoa); 
+		}
+		return pessoaRepository.save(pessoa);
+	}
+	
+	public void delete(Long id) {
+		pessoaRepository.deleteById(id);
+	}
+	
+	
 }

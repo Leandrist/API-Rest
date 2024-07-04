@@ -24,7 +24,7 @@ public class Pessoa {
     @Column (nullable = false, name = "PESSOA_NOME")
     private String nome;
     
-    @Column (nullable = true, name = "PESSOA_ENDEREÇO")
+    @Column (nullable = true, name = "PESSOA_ENDERECO")
     private String endereco;
     
     @Column (nullable = true, name = "PESSOA_CIDADE")
