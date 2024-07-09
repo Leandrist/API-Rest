@@ -8,13 +8,15 @@ import org.springframework.stereotype.Service;
 
 import br.com.big.ApiProject.model.Pessoa;
 import br.com.big.ApiProject.repository.PessoaRepository;
+import br.com.big.ApiProject.service.interfaces.PessoaServiceInterface;
 
 @Service
-public class PessoaService {
+public class PessoaService implements PessoaServiceInterface {
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
+	@Override
 	public Pessoa save(Pessoa pessoa) {
 		// Valida nome
         if (pessoa.getNome() == null || pessoa.getNome().isEmpty()) {
@@ -42,14 +44,17 @@ public class PessoaService {
 
 	//CRUD
 	
-	public List<Pessoa> findall(){
+	@Override
+	public List<Pessoa> findAll(){
 		return pessoaRepository.findAll(); 
 	}
 	
+	@Override
 	public Optional<Pessoa> findById(Long id) {
 		return pessoaRepository.findById(id); 
 	}
 	
+	@Override
 	public Pessoa update(Pessoa pessoa) {
 		Optional<Pessoa> findPessoa = pessoaRepository.findById(pessoa.getId());
 		
@@ -65,9 +70,8 @@ public class PessoaService {
 		return pessoaRepository.save(pessoa);
 	}
 	
+	@Override
 	public void delete(Long id) {
 		pessoaRepository.deleteById(id);
 	}
-	
-	
 }

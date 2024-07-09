@@ -11,9 +11,10 @@ import br.com.big.ApiProject.model.Pessoa;
 import br.com.big.ApiProject.model.TipoContato;
 import br.com.big.ApiProject.repository.ContatoRepository;
 import br.com.big.ApiProject.repository.PessoaRepository;
+import br.com.big.ApiProject.service.interfaces.ContatoServiceInterface;
 
 @Service
-public class ContatoService {
+public class ContatoService implements ContatoServiceInterface{
 
 	@Autowired
 	private ContatoRepository contatoRepository;
@@ -21,6 +22,7 @@ public class ContatoService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
+	@Override
 	public Contato save(Contato contato) {
 		validateContato(contato);
 		
@@ -44,20 +46,22 @@ public class ContatoService {
 		}
 	}
 
-
+	@Override
 	public Optional<Contato> findById(Long id) {
 		return contatoRepository.findById(id); 
 	}
 	
+	@Override
 	public List<Contato> findAll() {
 		return contatoRepository.findAll(); 
 	}
 
-	public void delete(long id) {
+	@Override
+	public void delete(Long id) {
 		contatoRepository.deleteById(id);
 	}
 
-
+	@Override
 	public Contato update(Contato contato) {
 		validateContato(contato);
 		
@@ -66,7 +70,7 @@ public class ContatoService {
 		if(findContato.isPresent()) {
 			Contato updContato = findContato.get();
 			updContato.setContato(contato.getContato());
-			updContato.setPessoa(contato.getPessoa());
+			updContato.setPessoa(findContato.get().getPessoa());
 			updContato.setTipoContato(contato.getTipoContato());
 
 			return contatoRepository.save(updContato); //UPDATE
@@ -109,6 +113,7 @@ public class ContatoService {
         // Tem 10 dígitos numéricos?
         return numero.matches("\\d{10}");
     }
+
 }
 		
 	

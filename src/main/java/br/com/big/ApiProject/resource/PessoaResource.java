@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.big.ApiProject.model.Pessoa;
 import br.com.big.ApiProject.service.PessoaService;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/pessoas") 
@@ -25,10 +26,10 @@ public class PessoaResource {
 	@Autowired
 	PessoaService pessoaService;
 	
-	//lista todas as pessoas
+	@Operation(summary = "Retorna todos os registos de Pessoas.")
 	@GetMapping //http://localhost:8585/api/pessoas
 	public ResponseEntity<List<Pessoa>> findAllPessoas(){
-		List<Pessoa> pessoas = pessoaService.findall();
+		List<Pessoa> pessoas = pessoaService.findAll();
 		if(pessoas == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -38,7 +39,7 @@ public class PessoaResource {
 		return ResponseEntity.ok(pessoas);
 	}
 	
-	//retorna os dados de uma Pessoa por ID
+	@Operation(summary = "Retorna o registo de Pessoa por ID.")
 	@GetMapping("/{id}") //http://localhost:8585/api/pessoas/id
 	public ResponseEntity<Optional<Pessoa>> findById(@PathVariable Long id){
 		Optional<Pessoa> pessoa = pessoaService.findById(id);
@@ -48,7 +49,7 @@ public class PessoaResource {
 		return ResponseEntity.ok(pessoa);
 	}
 	
-	//cria uma nova pessoa
+	@Operation(summary = "Grava um novo registo de Pessoa.")
 	@PostMapping //http://localhost:8585/api/pessoas
 	public ResponseEntity<Pessoa> save(@RequestBody Pessoa pessoa){
 		Pessoa newPessoa = pessoaService.save(pessoa);
@@ -57,7 +58,7 @@ public class PessoaResource {
 		return ResponseEntity.ok(newPessoa);
 	}
 	
-	//atualiza uma pessoa existente 
+	@Operation(summary = "Atualiza um registro de Pessoa. Validação por ID.") 
 	@PutMapping //http://localhost:8585/api/pessoas
 	public ResponseEntity<Pessoa> update(@RequestBody Pessoa pessoa){
 		Pessoa updPessoa = pessoaService.update(pessoa);
@@ -66,7 +67,7 @@ public class PessoaResource {
 		return ResponseEntity.ok(updPessoa);
 	}
 	
-	//remove uma pessoa por ID
+	@Operation(summary = "Remove um registro de Pessoa por ID.")
 	@DeleteMapping("/{id}") //http://localhost:8585/api/pessoas/id
 	public ResponseEntity<?> delete(@PathVariable Long id){
 		pessoaService.delete(id);
