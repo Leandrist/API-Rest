@@ -1,8 +1,10 @@
 package br.com.big.ApiProject.service.interfaces;
 
 import java.util.List;
+
 import java.util.Optional;
 
+import br.com.big.ApiProject.dto.PessoaDTO;
 import br.com.big.ApiProject.model.Pessoa;
 
 public interface PessoaServiceInterface {
@@ -16,4 +18,6 @@ public interface PessoaServiceInterface {
 	Pessoa update(Pessoa pessoa);
 
 	void delete(Long id);
+	
+	PessoaDTO convertToDTO(Pessoa pessoa);
 }

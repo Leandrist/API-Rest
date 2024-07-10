@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.big.ApiProject.dto.PessoaDTO;
 import br.com.big.ApiProject.model.Pessoa;
 import br.com.big.ApiProject.repository.PessoaRepository;
 import br.com.big.ApiProject.service.interfaces.PessoaServiceInterface;
@@ -74,4 +75,11 @@ public class PessoaService implements PessoaServiceInterface {
 	public void delete(Long id) {
 		pessoaRepository.deleteById(id);
 	}
+	
+	//malaDireta
+	@Override
+    public PessoaDTO convertToDTO(Pessoa pessoa) {
+        String malaDireta = String.format("%s – CEP: %s – %s/%s", pessoa.getEndereco(), pessoa.getCep(), pessoa.getCidade(), pessoa.getUf());
+        return new PessoaDTO(pessoa.getId(), pessoa.getNome(), malaDireta);
+    }
 }

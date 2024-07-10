@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.big.ApiProject.dto.PessoaDTO;
 import br.com.big.ApiProject.model.Pessoa;
 import br.com.big.ApiProject.service.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,14 +41,25 @@ public class PessoaResource {
 	}
 	
 	@Operation(summary = "Retorna o registo de Pessoa por ID.")
-	@GetMapping("/{id}") //http://localhost:8585/api/pessoas/id
-	public ResponseEntity<Optional<Pessoa>> findById(@PathVariable Long id){
-		Optional<Pessoa> pessoa = pessoaService.findById(id);
-		if(pessoa.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(pessoa);
-	}
+	@GetMapping("/{id}")
+    public PessoaDTO getPessoaById(@PathVariable Long id) {
+        Optional<Pessoa> pessoa = pessoaService.findById(id);
+        return pessoa.map(pessoaService::convertToDTO).orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+    }
+	
+	@Operation(summary = "Retorna os dados de uma Pessoa por ID para mala direta.")
+	@GetMapping("/maladireta/{id}")
+    public PessoaDTO getPessoaByIdMalaDireta(@PathVariable Long id) {
+        Optional<Pessoa> pessoaOpt = pessoaService.findById(id);
+        if (pessoaOpt.isPresent()) {
+            Pessoa pessoa = pessoaOpt.get();
+            String malaDireta = String.format("%s – CEP: %s – %s/%s",
+                    pessoa.getEndereco(), pessoa.getCep(), pessoa.getCidade(), pessoa.getUf());
+            return new PessoaDTO(pessoa.getId(), pessoa.getNome(), malaDireta);
+        } else {
+            throw new IllegalArgumentException("Pessoa não encontrada");
+        }
+    }
 	
 	@Operation(summary = "Grava um novo registo de Pessoa.")
 	@PostMapping //http://localhost:8585/api/pessoas
